@@ -1,0 +1,136 @@
+import './style.css'
+import typescriptLogo from './typescript.svg'
+import viteLogo from '/vite.svg'
+import { setupCounter } from './counter.ts'
+
+import van from 'vanjs-core';
+import { getTasks, createTask, completeTask, deleteTask } from './api/client';
+import { setTasks, addTask, updateTask, removeTask, subscribe, getState, setState, logout } from './state';
+import { AddForm, TaskList, Filters, Stats, Toast, AuthGate } from './ui/components';
+
+const { div } = van.tags;
+
+const app = document.getElementById('app')!;
+
+let toastTimeout: number | undefined;
+function showToast(msg: string, type: 'error' | 'success' = 'success') {
+  if (!app) return;
+  const toast = Toast(msg, type);
+  app.appendChild(toast);
+  if (toastTimeout) clearTimeout(toastTimeout);
+  toastTimeout = window.setTimeout(() => {
+    toast.remove();
+  }, 3000);
+}
+
+async function loadTasks() {
+  setState({ loading: true, error: null });
+  try {
+    const data = await getTasks();
+    setTasks(data.tasks);
+  } catch (e: any) {
+    setState({ error: e?.data?.error?.message || e.message || 'Failed to load tasks' });
+    showToast('Failed to load tasks', 'error');
+  } finally {
+    setState({ loading: false });
+  }
+}
+
+async function handleAdd(title: string) {
+  console.log('handleAdd called with:', title);
+  // Optimistic UI: add temp task
+  const tempId = 'temp-' + Math.random().toString(36).slice(2);
+  const tempTask = { id: tempId, title, status: 'pending', createdAt: new Date().toISOString() };
+  addTask(tempTask as any);
+  try {
+    const task = await createTask({ title });
+    updateTask(task);
+    showToast('Task added!');
+  } catch (e: any) {
+    console.error('Error in handleAdd:', e);
+    removeTask(tempId);
+    showToast(e?.data?.error?.message || e.message || 'Failed to add task', 'error');
+  }
+}
+
+async function handleToggle(id: string) {
+  const task = getState().tasks.find((t) => t.id === id);
+  if (!task) return;
+  // Optimistic UI
+  const updated = { ...task, status: task.status === 'completed' ? 'pending' as const : 'completed' as const };
+  updateTask(updated);
+  try {
+    const result = await completeTask(id);
+    updateTask(result);
+  } catch (e: any) {
+    updateTask(task); // rollback
+    showToast(e?.data?.error?.message || e.message || 'Failed to update task', 'error');
+  }
+}
+
+async function handleDelete(id: string) {
+  const task = getState().tasks.find((t) => t.id === id);
+  if (!task) return;
+  removeTask(id);
+  console.log('Task removed from store:', id, getState().tasks.map(t => t.id));
+  showToast('Task removed from UI (pending API)...');
+  try {
+    await deleteTask(id);
+    showToast('Task deleted!');
+    console.log('Task deleted in API:', id);
+  } catch (e: any) {
+    addTask(task);
+    showToast(e?.data?.error?.message || e.message || 'Failed to delete task', 'error');
+    console.error('Error deleting task:', e);
+  }
+}
+
+function render() {
+  const state = getState();
+  let filtered = state.tasks;
+  if (state.filter === 'active') filtered = filtered.filter((t) => t.status !== 'completed');
+  if (state.filter === 'completed') filtered = filtered.filter((t) => t.status === 'completed');
+  if (state.search) filtered = filtered.filter((t) => t.title.toLowerCase().includes(state.search.toLowerCase()));
+
+  van.add(app,
+    AuthGate(() =>
+      div({ class: 'todo-app' },
+                // Header with logout button
+        div({ class: 'app-header' },
+          van.tags.button({ class: 'logout-btn logout-absolute', onclick: () => { logout(); location.reload(); } }, 'Logout')
+        ),
+        div({ class: 'top-controls' },
+          div({ class: 'top-controls-left' },
+            AddForm(handleAdd),
+            Filters()
+          )
+        ),
+        Stats(),
+        state.loading ? div({ class: 'loading' }, 'Loading...') :
+          filtered.length === 0 ? div({ class: 'empty' }, 'No tasks found.') :
+          TaskList(filtered, { onToggle: handleToggle, onDelete: handleDelete }),
+        state.error && div({ class: 'error' }, state.error)
+      )
+    )
+  );
+}
+
+subscribe(() => {
+  app.innerHTML = '';
+  render();
+});
+
+
+
+let loadedTasks = false;
+subscribe(() => {
+  const state = getState();
+  if (state.auth.token && !loadedTasks && !state.loading && state.tasks.length === 0 && !state.error) {
+    loadedTasks = true;
+    loadTasks().finally(() => { loadedTasks = false; });
+  }
+  if (!state.auth.token) {
+    loadedTasks = false;
+  }
+});
+
