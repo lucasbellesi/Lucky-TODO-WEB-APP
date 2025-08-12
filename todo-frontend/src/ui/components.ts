@@ -65,11 +65,18 @@ export const AuthGate = (children: () => any) => {
 	return div(
 		!state.auth.token
 			? div(
-					button({ onclick: () => (showLogin.val = true) }, 'Login'),
-					button({ onclick: () => (showLogin.val = false) }, 'Register'),
-					showLogin,
-					() => (showLogin.val ? LoginForm(children) : RegisterForm(() => (showLogin.val = true)))
-				)
+				div({ class: 'auth-toggle' },
+					button(
+						{ class: () => showLogin.val ? 'active' : '', onclick: () => (showLogin.val = true) },
+						'Login'
+					),
+					button(
+						{ class: () => !showLogin.val ? 'active' : '', onclick: () => (showLogin.val = false) },
+						'Register'
+					)
+				),
+				() => (showLogin.val ? LoginForm(children) : RegisterForm(() => (showLogin.val = true)))
+			)
 			: div(
 				children()
 			)
@@ -93,19 +100,19 @@ export const Toast = (msg: string, type: 'error' | 'success' = 'success') =>
 // TaskItem
 export const TaskItem = (task: Task, { onToggle, onDelete }: { onToggle: () => void; onDelete: () => void }) =>
 	li({ class: `task-item${task.status === 'completed' ? ' completed' : ''}` },
-		   label(
-			   input({
-				   type: 'checkbox',
-				   checked: task.status === 'completed',
-				   oninput: onToggle,
-				   disabled: typeof task.id === 'string' && task.id.startsWith('temp-'),
-				   tabindex: 0,
-				   'aria-label': 'Toggle completed',
-			   }),
-			   span({ class: 'task-title' }, escapeHtml(task.title)),
-			   span({ style: 'color:gray;font-size:0.7em;margin-left:8px;' }, `[${task.id}]`)
-		   ),
-		   button({ class: 'delete-btn', onclick: onDelete, tabindex: 0, 'aria-label': 'Delete task', disabled: typeof task.id === 'string' && task.id.startsWith('temp-') }, '🗑️')
+		label(
+			input({
+				type: 'checkbox',
+				checked: task.status === 'completed',
+				oninput: onToggle,
+				disabled: typeof task.id === 'string' && task.id.startsWith('temp-'),
+				tabindex: 0,
+				'aria-label': 'Toggle completed',
+			}),
+			span({ class: 'task-title' }, escapeHtml(task.title)),
+			span({ style: 'color:gray;font-size:0.7em;margin-left:8px;' }, `[${task.id}]`)
+		),
+		button({ class: 'delete-btn', onclick: onDelete, tabindex: 0, 'aria-label': 'Delete task', disabled: typeof task.id === 'string' && task.id.startsWith('temp-') }, '🗑️')
 	);
 
 // TaskList
