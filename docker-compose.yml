@@ -1,0 +1,9 @@
+services:
+  web:
+    build:
+      context: .
+      args:
+        VITE_API_URL: "https://api.example.com"
+    ports:
+      - "8080:80"
+    restart: unless-stopped

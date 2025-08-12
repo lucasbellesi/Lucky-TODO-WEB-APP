@@ -135,7 +135,55 @@ npm run test
 
 > Tests use **Vitest**. Add more tests under `src/` and import your store/helpers.
 
-## Deployment
+## Docker Deployment
+
+This app includes production-ready Docker configuration with multi-stage builds, Nginx serving, and SPA routing support.
+
+### Build and run with Docker
+
+```bash
+# Build the Docker image with custom API URL
+docker build -t todo-frontend --build-arg VITE_API_URL=https://api.example.com .
+
+# Run the container
+docker run -p 8080:80 todo-frontend
+```
+
+The app will be available at [http://localhost:8080](http://localhost:8080)
+
+### Using Docker Compose
+
+```bash
+# Build and run with docker-compose
+docker compose up --build
+```
+
+The app will be available at [http://localhost:8080](http://localhost:8080)
+
+### Docker Features
+
+- **Multi-stage build**: Optimized production image with minimal size
+- **Nginx serving**: Production-ready web server with gzip compression
+- **SPA routing**: History mode routing works correctly (no 404s on refresh)
+- **Asset caching**: Long-term caching for assets, short cache for index.html
+- **Build-time API configuration**: Set `VITE_API_URL` via build args
+- **Security headers**: Basic security headers included
+
+### Customizing API URL
+
+You can configure the backend API URL at build time:
+
+```bash
+# For production
+docker build -t todo-frontend --build-arg VITE_API_URL=https://api.production.com .
+
+# For staging
+docker build -t todo-frontend --build-arg VITE_API_URL=https://api.staging.com .
+```
+
+Or modify the `docker-compose.yml` file to change the default API URL.
+
+## Traditional Deployment
 
 Any static host works (build emits static files in `dist/`). Popular options:
 
