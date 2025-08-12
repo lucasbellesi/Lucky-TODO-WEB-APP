@@ -5,7 +5,7 @@ import { setupCounter } from './counter.ts'
 
 import van from 'vanjs-core';
 import { getTasks, createTask, completeTask, deleteTask } from './api/client';
-import { setTasks, addTask, updateTask, removeTask, subscribe, getState, setState, logout } from './state';
+import { setTasks, addTask, updateTask, removeTask, subscribe, getState, setState, logout, replaceTaskId } from './state';
 import { AddForm, TaskList, Filters, Stats, Toast, AuthGate } from './ui/components';
 
 const { div } = van.tags;
@@ -37,18 +37,16 @@ async function loadTasks() {
 }
 
 async function handleAdd(title: string) {
-  console.log('handleAdd called with:', title);
-  // Optimistic UI: add temp task
   const tempId = 'temp-' + Math.random().toString(36).slice(2);
   const tempTask = { id: tempId, title, status: 'pending', createdAt: new Date().toISOString() };
   addTask(tempTask as any);
+
   try {
-    const task = await createTask({ title });
-    updateTask(task);
+    const task = await createTask({ title }); // el backend devuelve { id, ... } real
+    replaceTaskId(tempId, task);              // <- reemplaza el temp por el real
     showToast('Task added!');
   } catch (e: any) {
-    console.error('Error in handleAdd:', e);
-    removeTask(tempId);
+    removeTask(tempId);                       // rollback si falla
     showToast(e?.data?.error?.message || e.message || 'Failed to add task', 'error');
   }
 }

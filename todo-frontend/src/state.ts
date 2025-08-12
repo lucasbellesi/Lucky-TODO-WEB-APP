@@ -101,3 +101,9 @@ export function setFilter(filter: Filter) {
 export function setSearch(search: string) {
 	setState({ search });
 }
+
+export function replaceTaskId(oldId: string, newTask: Task) {
+  setState({
+    tasks: state.tasks.map(t => (t.id === oldId ? newTask : t)),
+  });
+}
