@@ -1,7 +1,4 @@
 import './style.css'
-import typescriptLogo from './typescript.svg'
-import viteLogo from '/vite.svg'
-import { setupCounter } from './counter.ts'
 
 import van from 'vanjs-core';
 import { getTasks, createTask, completeTask, deleteTask } from './api/client';
@@ -70,16 +67,13 @@ async function handleDelete(id: string) {
   const task = getState().tasks.find((t) => t.id === id);
   if (!task) return;
   removeTask(id);
-  console.log('Task removed from store:', id, getState().tasks.map(t => t.id));
-  showToast('Task removed from UI (pending API)...');
+  showToast('Removing task...');
   try {
     await deleteTask(id);
     showToast('Task deleted!');
-    console.log('Task deleted in API:', id);
   } catch (e: any) {
     addTask(task);
     showToast(e?.data?.error?.message || e.message || 'Failed to delete task', 'error');
-    console.error('Error deleting task:', e);
   }
 }
 
@@ -131,4 +125,3 @@ subscribe(() => {
     loadedTasks = false;
   }
 });
-
