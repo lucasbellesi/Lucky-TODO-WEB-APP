@@ -11,53 +11,22 @@
 }
 
 /* --- Auth/Login/Register Styles --- */
-.auth-bg {
-  min-height: 100vh;
-  width: 100vw;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: linear-gradient(135deg, var(--surface) 0%, #1a1d2e 100%);
-  position: fixed;
-  top: 0; left: 0; right: 0; bottom: 0;
-  z-index: 10;
-}
-
-.auth-bg::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.55);
-  pointer-events: none;
-}
-
-/* Auth centered card */
-.auth-card {
-  background: var(--surface);
-  border-radius: var(--radius);
-  border: 1px solid var(--border);
-  box-shadow: var(--shadow);
-  width: min(92vw, 380px);
-  padding: 1rem 1rem 1.25rem 1rem;
-  position: relative;
-  z-index: 1;
-  max-height: 90vh;
-  overflow: auto;
-}
 
 .auth-form {
-  background: transparent;
-  border: 0;
-  box-shadow: none;
-  padding: 0.75rem 0.25rem 0.25rem 0.25rem;
+  background: var(--surface);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  border: 1.5px solid var(--border);
+  padding: 1.2rem 1rem 1rem 1rem;
+  max-width: 370px;
   width: 100%;
+  margin: 0 auto 1.2rem auto;
   display: flex;
   flex-direction: column;
-  gap: 0.9rem;
+  gap: 1rem;
   align-items: stretch;
   justify-content: center;
   position: relative;
-  margin: 0; /* se contiene dentro de .auth-card */
 }
 
 .auth-form h2 {
@@ -74,37 +43,36 @@
   box-sizing: border-box;
 }
 @media (max-width: 600px) {
-  .auth-bg { padding: 0; }
   .auth-form h2 {
     font-size: 1.5em;
   }
 }
 
-.auth-tabs {
+.auth-toggle {
   display: flex;
   justify-content: center;
-  gap: 1.2rem;
-  margin-bottom: 0.8rem;
+  gap: .6rem;
+  margin: .8rem auto 1rem auto;
 }
-.auth-tabs button {
+.auth-toggle button {
   background: var(--filter-inactive);
   color: #f3f6fa;
   border-radius: 2em;
-  border: none;
-  padding: 0.7em 1.5em;
-  font-size: 1.08em;
+  border: 1px solid var(--border);
+  padding: 0.5em 1.1em;
+  font-size: 1em;
   font-weight: 500;
   transition: background 0.18s, color 0.18s;
-  height: 44px;
+  height: 40px;
   letter-spacing: 0.01em;
   cursor: pointer;
 }
-.auth-tabs button.active {
+.auth-toggle button.active {
   background: var(--filter-active);
   color: #fff;
   box-shadow: 0 1px 4px #7b81ff22;
 }
-.auth-tabs button:hover:not(.active) {
+.auth-toggle button:hover:not(.active) {
   background: #23283a;
   color: var(--primary);
 }

@@ -76,10 +76,10 @@ export const RegisterForm = (onSuccess: () => void) => {
 export const AuthGate = (children: () => any) => {
   const state = getState();
   const showLogin = van.state(true);
-  return !state.auth.token
-    ? div({ class: 'auth-bg' },
-        div({ class: 'auth-card' },
-          div({ class: 'auth-tabs' },
+  return div(
+    !state.auth.token
+      ? div(
+          div({ class: 'auth-toggle' },
             button(
               { class: () => showLogin.val ? 'active' : '', onclick: () => (showLogin.val = true) },
               'Login'
@@ -87,14 +87,14 @@ export const AuthGate = (children: () => any) => {
             button(
               { class: () => !showLogin.val ? 'active' : '', onclick: () => (showLogin.val = false) },
               'Register'
-            ),
+            )
           ),
           () => (showLogin.val ? LoginForm(children) : RegisterForm(() => (showLogin.val = true)))
         )
-      )
-    : div(
-        children()
-      );
+      : div(
+          children()
+        )
+  );
 };
 
 // TaskItem
