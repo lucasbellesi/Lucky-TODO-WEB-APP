@@ -15,7 +15,8 @@ function showToast(msg: string, type: 'error' | 'success' = 'success') {
   // Remove any existing toasts to keep only one visible
   document.querySelectorAll('.toast').forEach(el => el.remove());
   const toast = Toast(msg, type);
-  app.appendChild(toast);
+  // Append to body to avoid containing blocks created by filters/backdrop on #app
+  document.body.appendChild(toast);
   if (toastTimeout) clearTimeout(toastTimeout);
   toastTimeout = window.setTimeout(() => {
     toast.remove();
