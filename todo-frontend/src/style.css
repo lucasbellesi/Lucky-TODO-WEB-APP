@@ -269,9 +269,14 @@ h1 {
   height: 48px;
   display: flex;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: space-between;
   padding: 0 1rem;
   background: rgba(255, 255, 255, 0.03);
+}
+
+.app-title {
+  font-weight: 700;
+  color: #fff;
 }
 
 .todo-app {
@@ -708,6 +713,16 @@ button {
     color: #747bff;
   }
 }
+.toast { right: 1.25em; top: 1.25em; left: auto; bottom: auto; transform: none; }
+@keyframes toast-in { from { opacity: 0; transform: translateY(-10px);} to { opacity: .97; transform: translateY(0);} }
+
+/* refined delete button */
+.delete-btn { background: rgba(255,255,255,.08); color:#fff; border:1px solid var(--border); width:2.25em; height:2.25em; border-radius:50%; font-size:1.1em; display:flex; align-items:center; justify-content:center; transition: background .18s, box-shadow .18s, transform .1s; box-shadow:0 1px 4px #0002; }
+.delete-btn:hover:not(:disabled){ background: var(--danger); border-color: transparent; box-shadow:0 4px 16px #ff5d5d33; }
+.delete-btn:active{ transform: translateY(1px); }
+
+/* focus visible for a11y */
+button:focus-visible, .add-form input:focus-visible, .filters button:focus-visible, .task-item input[type="checkbox"]:focus-visible { outline:3px solid var(--input-focus); outline-offset:2px; }
 .auth-toggle {
   display: flex;
   gap: 0.5rem;

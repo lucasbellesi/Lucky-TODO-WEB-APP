@@ -37,16 +37,26 @@ export async function registerUser(data: { email: string; password: string; user
 }
 
 export async function loginUser(data: { email: string; password: string }): Promise<AuthTokens> {
-	const body = new URLSearchParams({
-		username: data.email,
-		password: data.password,
-	}).toString();
-	const res = await fetchJson(BASE_URL + '/auth/login', {
-		method: 'POST',
-		headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-		body,
-	});
-	return res;
+  const url = BASE_URL + '/auth/login';
+  // Try JSON first (common for many APIs)
+  try {
+    return await fetchJson(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+      body: JSON.stringify({ email: data.email, password: data.password }),
+    });
+  } catch (e: any) {
+    // Fallback to form-encoded (username/password) if server rejects JSON format
+    if (e && typeof e === 'object' && 'status' in e && [400, 401, 404, 405, 415, 422].includes((e as any).status)) {
+      const body = new URLSearchParams({ username: data.email, password: data.password }).toString();
+      return await fetchJson(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded', Accept: 'application/json' },
+        body,
+      });
+    }
+    throw e;
+  }
 }
 
 

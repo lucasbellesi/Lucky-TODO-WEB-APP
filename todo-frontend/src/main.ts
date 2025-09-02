@@ -91,6 +91,7 @@ function render() {
       div({ class: 'todo-app' },
                 // Header with logout button
         div({ class: 'app-header' },
+          div({ class: 'app-title' }, 'Lucky ToDo'),
           van.tags.button({ class: 'logout-btn logout-absolute', onclick: () => { logout(); location.reload(); } }, 'Logout')
         ),
         div({ class: 'top-controls' },
