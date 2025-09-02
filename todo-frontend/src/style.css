@@ -405,20 +405,22 @@ h1 {
   text-align: right;
 }
 
+/* Ghost-style logout button within header */
 .logout-btn {
-  background: var(--danger);
+  background: transparent;
   color: #fff;
-  border: none;
-  border-radius: var(--radius);
-  padding: 0.5em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  float: right;
-  margin-bottom: 1rem;
-  transition: background 0.2s;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 0.45em 0.9em;
+  font-size: 0.95em;
+  font-weight: 600;
+  transition: background 0.18s, color 0.18s, border-color 0.18s, box-shadow 0.18s;
 }
 .logout-btn:hover {
-  background: #b13b3b;
+  background: var(--danger);
+  color: #fff;
+  border-color: transparent;
+  box-shadow: 0 2px 8px #f43f5e33;
 }
 
 .task-list {
