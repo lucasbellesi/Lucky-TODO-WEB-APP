@@ -59,7 +59,7 @@ export interface Task {
 	priority?: TaskPriority;
 	dueDate?: string | null;
 	createdAt: string;
-	updatedAt?: string;
+	updatedAt?: string | null;
 	categoryId?: UUID | null;
 }
 
