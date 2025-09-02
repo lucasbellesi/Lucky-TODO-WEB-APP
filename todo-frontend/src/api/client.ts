@@ -65,7 +65,7 @@ export interface GetTasksParams {
 }
 
 export async function getTasks(params: GetTasksParams = {}): Promise<PaginatedTasks> {
-	const url = new URL(BASE_URL + '/tasks/');
+	const url = new URL(BASE_URL + '/tasks');
 	if (params.status) url.searchParams.set('status', params.status);
 	if (params.priority) url.searchParams.set('priority', params.priority);
 	if (params.limit) url.searchParams.set('limit', String(params.limit));
@@ -76,17 +76,17 @@ export async function getTasks(params: GetTasksParams = {}): Promise<PaginatedTa
 	return PaginatedTasksSchema.parse(toCamel(res));
 }
 
-	export async function createTask(data: CreateTaskRequest, token?: string): Promise<Task> {
-		const res = await fetchJson(BASE_URL + '/tasks/', {
-			method: 'POST',
-			headers: { 'Content-Type': 'application/json', ...getAuthHeaders(token) },
-			body: JSON.stringify(data),
-		});
-		return TaskSchema.parse(toCamel(res));
-	}
+export async function createTask(data: CreateTaskRequest, token?: string): Promise<Task> {
+	const res = await fetchJson(BASE_URL + '/tasks', {
+		method: 'POST',
+		headers: { 'Content-Type': 'application/json', ...getAuthHeaders(token) },
+		body: JSON.stringify(data),
+	});
+	return TaskSchema.parse(toCamel(res));
+}
 
 export async function getTask(id: string, token?: string): Promise<Task> {
-	const res = await fetchJson(BASE_URL + `/tasks/${id}`, {
+	const res = await fetchJson(BASE_URL + `/tasks/${id}` , {
 		headers: { ...getAuthHeaders(token) },
 	});
 	return TaskSchema.parse(toCamel(res));
