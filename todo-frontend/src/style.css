@@ -697,6 +697,45 @@ button {
     color: #747bff;
   }
 }
+
+/* Mobile polish */
+@media (max-width: 480px) {
+  /* Card y espaciados */
+  #app { max-width: 99vw; margin: 1.2rem auto; padding: 0.8rem 0.6rem; }
+  .todo-app { padding: 1rem; gap: 1.25rem; }
+
+  /* Header compacto */
+  .app-header { height: 52px; padding: 0 .5rem; }
+  .app-title { font-size: 1rem; }
+  .logout-btn { padding: .35em .7em; font-size: .9em; border-radius: 8px; }
+
+  /* Add form: layout estable 1fr + auto */
+  .add-form { display: grid; grid-template-columns: 1fr auto; gap: .5rem; margin: 1rem 0; padding: .6rem; }
+  .add-form input[type="text"] { height: 40px; font-size: 1rem; padding: .7em .9em; }
+  .add-form button { height: 40px; min-width: 72px; font-size: .95rem; padding: 0 1rem; border-radius: 999px; }
+
+  /* Búsqueda y filtros */
+  .search-container { margin: .6rem 0 1rem 0; }
+  input[type="search"] { height: 40px; padding-left: 2.1em; font-size: .95rem; }
+  .filters { gap: .4rem; margin: 1rem 0; }
+  .filters button { min-width: 70px; padding: .45em .8em; font-size: .9rem; }
+
+  /* Lista de tareas */
+  .task-list { gap: .4rem; margin-top: 1rem; }
+  .task-item { padding: .8rem; gap: .7rem; min-height: 54px; }
+  .task-item input[type="checkbox"] { width: 1.2em; height: 1.2em; margin-right: .8em; }
+  .task-title { font-size: 1rem; }
+
+  /* Botón borrar más discreto, tamaño dedo */
+  .delete-btn { width: 2em; height: 2em; font-size: 1em; }
+
+  /* Stats y vacíos */
+  .stats { margin: .8rem 0; font-size: .95rem; text-align: center; }
+  .empty, .loading { margin: 2rem 0 1rem 0; font-size: 1rem; }
+
+  /* Toast con safe-area */
+  .toast { top: calc(1rem + env(safe-area-inset-top)); right: .8rem; left: auto; bottom: auto; }
+}
 .toast { right: 1.25em; top: 1.25em; left: auto; bottom: auto; transform: none; }
 @keyframes toast-in { from { opacity: 0; transform: translateY(-10px);} to { opacity: .97; transform: translateY(0);} }
 
