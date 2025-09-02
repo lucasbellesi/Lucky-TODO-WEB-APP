@@ -111,7 +111,7 @@ export const TaskItem = (task: Task, { onToggle, onDelete }: { onToggle: () => v
       }),
       span({ class: 'task-title' }, escapeHtml(task.title))
     ),
-    button({ class: 'delete-btn', onclick: onDelete, tabindex: 0, 'aria-label': 'Delete task', disabled: typeof task.id === 'string' && task.id.startsWith('temp-') }, 'Delete')
+    button({ class: 'delete-btn', onclick: onDelete, tabindex: 0, 'aria-label': 'Delete task', title: 'Delete task', disabled: typeof task.id === 'string' && task.id.startsWith('temp-') }, '🗑️')
   );
 
 // TaskList
@@ -136,7 +136,6 @@ export const AddForm = (onAdd: (title: string) => void) => {
       }
     },
   },
-    label({ for: 'add-task-input' }, 'Add task:'),
     input({
       id: 'add-task-input',
       type: 'text',
@@ -144,7 +143,7 @@ export const AddForm = (onAdd: (title: string) => void) => {
       maxlength: 100,
       value,
       oninput: (e: Event) => (value.val = (e.target as HTMLInputElement).value),
-      placeholder: 'What needs to be done?',
+      placeholder: 'Write a task and press Enter…',
       autocomplete: 'off',
       tabindex: 0,
     }),
