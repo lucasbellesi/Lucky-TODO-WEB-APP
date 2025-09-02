@@ -12,6 +12,8 @@ const app = document.getElementById('app')!;
 let toastTimeout: number | undefined;
 function showToast(msg: string, type: 'error' | 'success' = 'success') {
   if (!app) return;
+  // Remove any existing toasts to keep only one visible
+  document.querySelectorAll('.toast').forEach(el => el.remove());
   const toast = Toast(msg, type);
   app.appendChild(toast);
   if (toastTimeout) clearTimeout(toastTimeout);
@@ -117,9 +119,9 @@ subscribe(() => {
 let loadedTasks = false;
 subscribe(() => {
   const state = getState();
-  if (state.auth.token && !loadedTasks && !state.loading && state.tasks.length === 0 && !state.error) {
+  if (state.auth.token && !loadedTasks && !state.loading && !state.error) {
     loadedTasks = true;
-    loadTasks().finally(() => { loadedTasks = false; });
+    void loadTasks();
   }
   if (!state.auth.token) {
     loadedTasks = false;
